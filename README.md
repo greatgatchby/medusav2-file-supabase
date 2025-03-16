@@ -26,7 +26,7 @@ Update your `medusa-config.js` or similar configuration file to include the `med
 ```js
 const plugins = [
   {
-    resolve: "medusav2-file-supabase-storage",
+    resolve: "medusav2-file-supabase-storage/modules/file",
     options: {
       apiKey: "your-supabase-api-key",
       supabaseUrl: "your-supabase-url",
@@ -62,31 +62,6 @@ To delete a file from Supabase storage:
 ```ts
 await fileProvider.delete({ fileKey: "example.png" });
 ```
-
-## Publishing to npm
-
-To publish this package to npm, follow these steps:
-
-1. **Ensure you are logged in to npm:**
-   ```sh
-   npm login
-   ```
-
-2. **Check if the package name is available:**
-   ```sh
-   npm search medusav2-supabase-storage
-   ```
-   If it's taken, consider renaming your package in `package.json`.
-
-3. **Build your package (if using TypeScript):**
-   ```sh
-   npm run build
-   ```
-
-4. **Publish the package:**
-   ```sh
-   npm publish --access public
-   ```
 
 ## Development
 
