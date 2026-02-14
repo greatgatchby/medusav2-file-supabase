@@ -30,10 +30,9 @@ class MyFileProviderService extends AbstractFileProviderService {
 
     async upload(file: ProviderUploadFileDTO): Promise<ProviderFileResultDTO> {
         try {
-            // Convert the binary string to a Buffer (Supabase can work directly with buffers)
-            const buffer = Buffer.from(file.content, 'binary');
+            // Convert the base64-encoded string to a Buffer
+            const buffer = Buffer.from(file.content, 'base64');
 
-            debugger;
             // Upload the file to the Supabase storage bucket
             const {data, error} = await this.supabase.storage
                 .from(this.options_.bucketName) // Use bucket name from options

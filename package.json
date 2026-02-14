@@ -1,6 +1,6 @@
 {
   "name": "medusav2-file-supabase-storage",
-  "version": "0.0.5",
+  "version": "0.0.8",
   "description": "A starter for Medusa plugins.",
   "author": "greatgatchby",
   "license": "MIT",
@@ -26,7 +26,8 @@
   "scripts": {
     "build": "medusa plugin:build",
     "dev": "medusa plugin:develop",
-    "prepublishOnly": "medusa plugin:build"
+    "prepublishOnly": "medusa plugin:build",
+    "publish": "npm publish"
   },
   "devDependencies": {
     "@medusajs/admin-sdk": "2.4.0",

@@ -24,18 +24,27 @@ To use this plugin in your Medusa v2 project, configure it in your Medusa backen
 Update your `medusa-config.js` or similar configuration file to include the `medusav2-supabase-storage` provider:
 
 ```js
-const plugins = [
-  {
-    resolve: "medusav2-file-supabase-storage/modules/file",
-    options: {
-      apiKey: "your-supabase-api-key",
-      supabaseUrl: "your-supabase-url",
-      bucketName: "your-bucket-name",
+module.exports = defineConfig({
+  // ...
+  modules: [
+     {
+      resolve: "@medusajs/medusa/file",
+      options: {
+        providers: [
+          {
+            resolve: "medusav2-file-supabase-storage",
+            id: "supabase",
+            options: {
+              supabaseUrl: process.env.SUPABASE_URL!,
+              apiKey: process.env.SUPABASE_KEY!,
+              bucketName: process.env.SUPABASE_BUCKET!,
+            },
+          },
+        ],
+      },
     },
-  },
-];
-
-module.exports = { plugins };
+  ]
+})
 ```
 
 ## Usage

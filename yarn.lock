@@ -7510,13 +7510,6 @@ media-typer@0.3.0:
   resolved "https://registry.npmjs.org/media-typer/-/media-typer-0.3.0.tgz"
   integrity sha512-dq+qelQ9akHpcOl/gUVRTxVIOkAJ1wR3QAvb4RsVjS8oVoFjDGTc679wJYmUmknUF5HwMLOgb5O+a3KxfWapPQ==
 
-medusav2-file-supabase-storage@^0.0.1:
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/medusav2-file-supabase-storage/-/medusav2-file-supabase-storage-0.0.1.tgz#4304eb156b66deefcba5b27fa5d0566d62d0da62"
-  integrity sha512-WZniKNcDMI/4PSZspykzE/9rtcdCLXgcSrzGvg3HrqT7bVeCyiMR4UjGpvgICHPvahJJ1e8PP1MmwU4z1n2L2A==
-  dependencies:
-    "@supabase/supabase-js" "^2.49.1"
-
 merge-descriptors@1.0.3:
   version "1.0.3"
   resolved "https://registry.npmjs.org/merge-descriptors/-/merge-descriptors-1.0.3.tgz"
