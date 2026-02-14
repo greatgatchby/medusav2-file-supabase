@@ -7,7 +7,9 @@
   "files": [
     ".medusa/server"
   ],
+  "main": "./.medusa/server/src/modules/file/index.js",
   "exports": {
+    ".": "./.medusa/server/src/modules/file/index.js",
     "./package.json": "./package.json",
     "./.medusa/server/src/modules/*": "./.medusa/server/src/modules/*/index.js",
     "./modules/*": "./.medusa/server/src/modules/*/index.js",
