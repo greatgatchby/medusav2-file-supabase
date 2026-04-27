@@ -1,6 +1,7 @@
 import {Logger, ProviderDeleteFileDTO, ProviderFileResultDTO, ProviderGetFileDTO, ProviderUploadFileDTO} from "@medusajs/framework/types";
 import {AbstractFileProviderService} from "@medusajs/framework/utils";
 import {createClient} from "@supabase/supabase-js"; // Import Supabase client
+import {Readable} from "stream";
 
 type InjectedDependencies = {
     logger: Logger;
@@ -83,6 +84,51 @@ class MyFileProviderService extends AbstractFileProviderService {
             };
         } catch (error) {
             this.logger_.error(`Error getting presigned upload URL from Supabase: ${error.message}`);
+            throw error;
+        }
+    }
+
+    async getPresignedDownloadUrl(fileData: ProviderGetFileDTO): Promise<string> {
+        try {
+            const { data, error } = await this.supabase.storage
+                .from(this.options_.bucketName)
+                .createSignedUrl(fileData.fileKey, 3600);
+
+            if (error) throw error;
+            return data.signedUrl;
+        } catch (error) {
+            this.logger_.error(`Error getting presigned download URL from Supabase: ${error.message}`);
+            throw error;
+        }
+    }
+
+    async getDownloadStream(fileData: ProviderGetFileDTO): Promise<Readable> {
+        try {
+            const { data, error } = await this.supabase.storage
+                .from(this.options_.bucketName)
+                .download(fileData.fileKey);
+
+            if (error) throw error;
+
+            const arrayBuffer = await data.arrayBuffer();
+            return Readable.from(Buffer.from(arrayBuffer));
+        } catch (error) {
+            this.logger_.error(`Error getting download stream from Supabase: ${error.message}`);
+            throw error;
+        }
+    }
+
+    async getAsBuffer(fileData: ProviderGetFileDTO): Promise<Buffer> {
+        try {
+            const { data, error } = await this.supabase.storage
+                .from(this.options_.bucketName)
+                .download(fileData.fileKey);
+
+            if (error) throw error;
+
+            return Buffer.from(await data.arrayBuffer());
+        } catch (error) {
+            this.logger_.error(`Error getting file as buffer from Supabase: ${error.message}`);
             throw error;
         }
     }
