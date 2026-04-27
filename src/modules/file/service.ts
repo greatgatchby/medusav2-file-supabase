@@ -42,7 +42,7 @@ class MyFileProviderService extends AbstractFileProviderService {
                     upsert: false, // Prevent overwriting existing files
                 });
 
-            if (error && error.statusCode !== "409") {
+            if (error && (error as any).statusCode !== "409") {
                 console.error(error);
                 throw error;
             }
@@ -58,7 +58,7 @@ class MyFileProviderService extends AbstractFileProviderService {
                 key: file.filename, // We use the filename as the key
             };
         } catch (error) {
-            this.logger_.error(`Error uploading file to Supabase: ${error.message}`);
+            this.logger_.error(`Error uploading file to Supabase: ${(error as any).message}`);
             throw error;
         }
     }
@@ -83,7 +83,7 @@ class MyFileProviderService extends AbstractFileProviderService {
                 key: fileKey,
             };
         } catch (error) {
-            this.logger_.error(`Error getting presigned upload URL from Supabase: ${error.message}`);
+            this.logger_.error(`Error getting presigned upload URL from Supabase: ${(error as any).message}`);
             throw error;
         }
     }
@@ -97,7 +97,7 @@ class MyFileProviderService extends AbstractFileProviderService {
             if (error) throw error;
             return data.signedUrl;
         } catch (error) {
-            this.logger_.error(`Error getting presigned download URL from Supabase: ${error.message}`);
+            this.logger_.error(`Error getting presigned download URL from Supabase: ${(error as any).message}`);
             throw error;
         }
     }
@@ -113,7 +113,7 @@ class MyFileProviderService extends AbstractFileProviderService {
             const arrayBuffer = await data.arrayBuffer();
             return Readable.from(Buffer.from(arrayBuffer));
         } catch (error) {
-            this.logger_.error(`Error getting download stream from Supabase: ${error.message}`);
+            this.logger_.error(`Error getting download stream from Supabase: ${(error as any).message}`);
             throw error;
         }
     }
@@ -128,15 +128,23 @@ class MyFileProviderService extends AbstractFileProviderService {
 
             return Buffer.from(await data.arrayBuffer());
         } catch (error) {
-            this.logger_.error(`Error getting file as buffer from Supabase: ${error.message}`);
+            this.logger_.error(`Error getting file as buffer from Supabase: ${(error as any).message}`);
             throw error;
         }
     }
 
     async delete(file: ProviderDeleteFileDTO): Promise<void> {
         try {
-            // Delete the file from Supabase storage
-            const {error} = await this.supabase.storage
+            const { data: exists } = await this.supabase.storage
+                .from(this.options_.bucketName)
+                .list("", { search: file.fileKey });
+
+            if (!exists || exists.length === 0) {
+                this.logger_.info(`File not found in Supabase, skipping delete: ${file.fileKey}`);
+                return;
+            }
+
+            const { error } = await this.supabase.storage
                 .from(this.options_.bucketName)
                 .remove([file.fileKey]);
 
@@ -146,7 +154,7 @@ class MyFileProviderService extends AbstractFileProviderService {
 
             this.logger_.info(`File deleted successfully from Supabase: ${file.fileKey}`);
         } catch (error) {
-            this.logger_.error(`Error deleting file from Supabase: ${error.message}`);
+            this.logger_.error(`Error deleting file from Supabase: ${(error as any).message}`);
             throw error;
         }
     }
