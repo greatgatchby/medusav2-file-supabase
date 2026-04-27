@@ -1,4 +1,4 @@
-import {Logger, ProviderDeleteFileDTO, ProviderFileResultDTO, ProviderUploadFileDTO} from "@medusajs/framework/types";
+import {Logger, ProviderDeleteFileDTO, ProviderFileResultDTO, ProviderGetFileDTO, ProviderUploadFileDTO} from "@medusajs/framework/types";
 import {AbstractFileProviderService} from "@medusajs/framework/utils";
 import {createClient} from "@supabase/supabase-js"; // Import Supabase client
 
@@ -58,6 +58,31 @@ class MyFileProviderService extends AbstractFileProviderService {
             };
         } catch (error) {
             this.logger_.error(`Error uploading file to Supabase: ${error.message}`);
+            throw error;
+        }
+    }
+
+    async getPresignedUploadUrl(
+        fileData: ProviderGetFileDTO & { filename: string; mimeType?: string; access?: string; expiresIn?: number }
+    ): Promise<ProviderFileResultDTO> {
+        try {
+            const fileKey = fileData.filename;
+
+            const { data, error } = await this.supabase.storage
+                .from(this.options_.bucketName)
+                .createSignedUploadUrl(fileKey);
+
+            if (error) {
+                this.logger_.error(`Error creating signed upload URL: ${error.message}`);
+                throw error;
+            }
+
+            return {
+                url: data.signedUrl,
+                key: fileKey,
+            };
+        } catch (error) {
+            this.logger_.error(`Error getting presigned upload URL from Supabase: ${error.message}`);
             throw error;
         }
     }

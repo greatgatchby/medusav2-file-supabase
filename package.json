@@ -1,7 +1,7 @@
 {
   "name": "medusav2-file-supabase-storage",
-  "version": "0.0.9",
-  "description": "A starter for Medusa plugins.",
+  "version": "0.1.0",
+  "description": "A Medusa plugin for file storage using Supabase.",
   "author": "greatgatchby",
   "license": "MIT",
   "files": [
